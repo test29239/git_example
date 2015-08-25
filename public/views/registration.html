@@ -1,0 +1,54 @@
+<form ng-submit="register()" >
+
+<h3>Registration </h3>
+
+	<label>Title</label>
+	
+	<select ng-model="selectedtag" ng-options="opt for opt in tag_details" required>
+	  <option></option>
+	</select>
+	<label>Username</label>&nbsp&nbsp
+		<input type="text" ng-model="username" required><br><br>
+	<label>Email</label>&nbsp&nbsp
+		<input type="email" ng-model="email" required><br><br>
+
+	<label>Password</label>&nbsp&nbsp
+		<input type="password" ng-model="password" required><br><br>
+
+	<label>Phone Number</label>&nbsp&nbsp
+		<input type="number" ng-model="phone_number" required><br><br>
+
+
+	<label>Select as</label>
+	<select ng-model="selectedtype" ng-options="opt for opt in type_details" required>
+	  <option></option>
+	</select>
+
+
+
+	<label>Gender as</label>
+	<select ng-model="selectGender" ng-options="opt for opt in gender_details" required>
+	  <option></option>
+	</select>
+
+	
+	<label>Country</label>
+	<select ng-model="selectCountry" ng-options="opt.country for opt in country_list" ng-change="select_city(o.country)" required>
+	  <option></option>
+	</select>
+	
+	<label>City</label>
+	<select ng-model="selectcity" ng-options="opt for opt in city_list.city_val"  required>
+	  <option></option>
+	</select>
+	<br><br>
+
+
+	<input type="submit" value="submit" >
+{{message}}
+
+</form>
+
+
+
+

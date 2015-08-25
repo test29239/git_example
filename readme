@@ -1,0 +1,9 @@
+https://drive.google.com/folderview?id=0BxyNnxcJpcoHfkgxTnJQR0RVV2lnLV9WQW1ZZTNYYkJQVWIxeGdTdFV6LVAyTGU3ZjFUVWs&usp=sharing
+
+http://zhuravel.biz/installing-neo4j-on-ubuntu
+
+sudo service neo4j-service start
+
+sudo service neo4j-service stop
+
+sudo service neo4j-service restart

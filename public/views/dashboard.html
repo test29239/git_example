@@ -1,0 +1,259 @@
+<h1>Authentication successful</h1>
+<a href="" ng-click="logout()">Logout</a><br>
+<a href="" ng-click='toggleModal()'>Profile setting</a>	<br>
+<a href="" ng-click='toggleModal1()'>Account Setting</a><br>
+<a href="" ng-click='toggleModal2()'>Privacy Setting</a><br>
+<a href="" ng-click='chat_modal()'>Create Chat</a>	<br>
+
+
+
+
+<input type="hidden" ng-model="user_det[0].user._id">
+
+<h2>Group List</h2>
+<ul>
+
+	<li ng-repeat="u in user_group[0]" id="message{{$index}}">{{u.g.properties.name}}
+		<button ng-click="chat_with_group($index,u.g._id)">click here to chat with Group members</button>
+		<button ng-click="remove_from_group($index,u.g._id)">Remove from Group</button>
+	</li>
+	<li>
+		
+
+	</li>
+</ul>
+
+
+<!-- for(i=0;i<a.length;i++){
+console.log(a[i].g.properties.name +'----'+a[i].g._id)
+} -->
+
+
+
+
+
+
+
+<!-- 
+<button ng-click='toggleModal()'>Open Modal Dialog</button> -->
+<modal-dialog show='modalShown' width='750px' height='70%'>
+  <form ng-submit="update_personalDetails(profile_image,user_det[0].user.properties.photo)" enctype="multipart/form-data">
+
+	<h3>Profile Setting </h3>
+
+		<input type="hidden" ng-model="user_det[0].user._id">
+		<label>Username</label>&nbsp&nbsp
+			<input type="text" ng-model="user_det[0].user.properties.username" required><br><br>
+		<label>Title</label>
+		
+		<select ng-model="user_det[0].user.properties.title" ng-options="opt for opt in tag_details" required>
+		  <option></option>
+		</select>
+		<br><br>
+		<label>Phone Number</label>&nbsp&nbsp
+			<input type="text" ng-model="user_det[0].user.properties.phone" required><br><br>
+
+
+		<label>Gender as</label>
+
+		<select ng-model="user_det[0].user.properties.gender" ng-options="opt for opt in gender_details" required>
+		  <option></option>
+		</select>
+		<br><br>
+		<label>About You</label>&nbsp&nbsp
+			 <textarea ng-model="user_det[0].user.properties.description"></textarea><br><br>
+		<label>Choose Brand Image</label>&nbsp&nbsp
+			 
+			 <!-- <p><input type="file"    id="engPdf" required  /> -->
+			 <br><br>
+		
+		<img ng-src="./uploads/{{user_det[0].user.properties.photo}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-250px">
+		 <img ng-src="{{image_source}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-250px">
+		<input type="file" id="trigger" file-input="profile_image" onchange="angular.element(this).scope().setFile(this)" accept="image/*">
+		<!-- <label>Country</label>
+		<select ng-model="user_det[0].user.properties.country" ng-options="opt.country for opt in country_list"  required>
+		  <option></option>
+		</select> 
+		<br><br> -->
+		
+		<!-- <label>City</label>
+		<select ng-model="selectcity" ng-options="opt for opt in city_list.city_val"  required>
+		  <option></option>
+		</select>
+		<br><br> -->
+
+
+		<input type="submit" value="Save Settings" >
+	{{message1}}
+
+	</form>
+</modal-dialog>
+
+ <modal-dialog show='modalShown1' width='750px' height='70%'>
+  <form ng-submit="" >
+
+	<h3>Accounting Setting </h3>
+
+		<input type="hidden" ng-model="user_det[0].user._id">
+		<label>Email</label>&nbsp&nbsp
+			<input type="text" ng-model="user_det[0].user.properties.email" required><br><br>
+		
+		<label>Password</label> &nbsp&nbsp<button ng-click='toggleModal3()'>Password Change</button>	<br><br>
+
+
+		<!-- <input type="submit" value="Save Settings" > -->
+	<!-- {{message}}
+ -->
+	</form>
+</modal-dialog>
+
+<modal-dialog show='modalShown2' width='550px' height='70%'>
+  <form ng-submit="" >
+
+	<h3>Privacy changes </h3>
+
+		<input type="hidden" ng-model="user_det[0].user._id">
+		<label>Search Privacy</label>
+		 <input type="radio" name="search_privacy" ng-model="search_privacy" value="yes"  ng-required="!color"/>Yes
+        <input type="radio" name="search_privacy" ng-model="search_privacy" value="no"  ng-required="!color" />NO
+        <br>
+		<label>Search History</label>
+		 <input type="radio" name="search_history" ng-model="search_history" value="yes" ng-required="!color"/>Yes
+        <input type="radio" name="search_history" ng-model="search_history" value="no"  ng-required="!color" />No
+        <br/>
+		<label>Allow Tagging</label>
+		 <input type="radio" name="allow_taging" ng-model="allow_taging" value="yes"  ng-required="!color"/>Yes
+        <input type="radio" name="allow_taging" ng-model="allow_taging" value="no"  ng-required="!color" />No
+        <br/>
+        <label>Profile Information Visibility</label>&nbsp&nbsp&nbsp
+        <label>Posts</label>
+		<select ng-model="posts" >
+		  <option value="1">EveryOne</option>
+		  <option value="0">None</option>
+		</select>
+		<br><br>
+		<label>Followers</label>
+		<select ng-model="followers"  >
+		  <option value="1">EveryOne</option>
+		  <option value="0">None</option>
+		</select>
+		<br><br>
+		<label>Following</label>
+		<select ng-model="following"  >
+		 <option value="1">EveryOne</option>
+		  <option value="0">None</option>
+		</select>
+		<br><br>
+		<label>Review</label>
+		<select ng-model="review"  >
+		 <option value="1">EveryOne</option>
+		  <option value="0">None</option>
+		</select>
+		<br><br>
+		<label>Circle</label>
+		<select ng-model="circle"  >
+		 <option value="1">EveryOne</option>
+		  <option value="0">None</option>
+		</select>
+		<br><br>
+		
+		
+
+
+		<input type="submit" value="Save Settings" >
+	{{message}}
+
+	</form>
+</modal-dialog>
+
+
+
+
+
+<modal-dialog show='modalShown3' width='750px' height='70%'>
+  <form ng-submit="change_password(new_password,confirm_password)" >
+
+	<h3>Password Setting </h3>
+
+		<input type="hidden" ng-model="user_det[0].user._id">
+		
+		<label>Old Password</label>&nbsp&nbsp
+			<input type="password" ng-model="user_det[0].user.properties.password" required><br><br>
+		<label>New Password</label>&nbsp&nbsp
+			<input type="password" ng-model="new_password" required><br><br>
+		<label>Confirm Password</label>&nbsp&nbsp
+			<input type="password" ng-model="confirm_password" required><br><br>
+
+		<input type="submit" value="Passwod change" >
+	{{message2}}
+
+	</form>
+</modal-dialog>
+
+
+
+
+
+
+<modal-dialog show='modalShown_chat' width='750px' height='70%'>
+  <form ng-submit="create_group(user_det[0].user._id,chatgroup_name)" >
+
+	<h3>Creating new Chat Group </h3>
+	{{user_det[0]}}
+		<input type="hidden" ng-model="user_det[0].user._id">
+		
+		<label>Enter Chat group name</label>&nbsp&nbsp
+			<input type="text" ng-model="chatgroup_name" required><br><br>
+		
+
+		<input type="submit" value="Creat Group" >
+	
+
+	</form>
+	{{message_chat}}
+</modal-dialog>
+<style>
+	
+.ng-modal-overlay {
+  /* A dark translucent div that covers the whole screen */
+  position:absolute;
+  z-index:9999;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  opacity: 0.8;
+}
+.ng-modal-dialog {
+  /* A centered div above the overlay with a box shadow. */
+  z-index:10000;
+  position: absolute;
+  width: 50%; /* Default */
+
+  /* Center the dialog */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+
+  background-color: #fff;
+  box-shadow: 4px 4px 80px #000;
+}
+.ng-modal-dialog-content {
+  padding:10px;
+  text-align: left;
+}
+.ng-modal-close {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 120%;
+  display: inline-block;
+  font-weight: bold;
+  font-family: 'arial', 'sans-serif';
+}
+</style>

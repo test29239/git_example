@@ -1,0 +1,103 @@
+<a href="" ng-click="add_ppl()">Add Ppl to group</a><br>
+<p>People in group</p>
+<ul>
+	<li ng-repeat="gd in personal_group_det[0]" id="message{{$index}}">{{gd.m.properties.username}}
+		
+	</li>
+</ul>
+
+
+<modal-dialog show='modalShown_ppl' width='750px' height='70%'>
+
+	<h3>Add People group</h3>
+		<ul>
+			<li ng-repeat="b in all_user[0]" id="message{{$index}}">{{b.u.properties.username}}
+			
+				<button ng-click="Add_group($index,b.u._id,personal_group_det[0][0].g.properties.name)">Add</button>
+				<!-- <button ng-click="remove_from_group($index,b.u.g._id)">Remove from Group</button> -->
+			</li>
+		</ul>
+
+	{{message_chat}}
+</modal-dialog>
+
+
+<!-- ng-controller="AppCtrl" -->
+<div >
+  <div class="col">
+    <h3>Messages</h3>
+    <div class="overflowable">
+      <p ng-repeat="message in messages" >{{message.text}}</p>
+    </div>
+  </div>
+ 
+  <div class="clr">
+    <form ng-submit="sendMessage()">Message: 
+      <input size="60" ng-model="message"/>
+      <input type="submit" value="Send"/>
+    </form>
+  </div>
+  
+</div>
+<style>
+      dd,dt {
+        float:left;
+        margin:0;
+        padding:5px;
+        clear:both;
+        display:block;
+        width:100%;
+
+      }
+      dt {
+        background:#ddd;
+      }
+      time {
+        color:gray;
+      }
+    </style>
+<style>
+	
+.ng-modal-overlay {
+  /* A dark translucent div that covers the whole screen */
+  position:absolute;
+  z-index:9999;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  opacity: 0.8;
+}
+.ng-modal-dialog {
+  /* A centered div above the overlay with a box shadow. */
+  z-index:10000;
+  position: absolute;
+  width: 50%; /* Default */
+
+  /* Center the dialog */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+
+  background-color: #fff;
+  box-shadow: 4px 4px 80px #000;
+}
+.ng-modal-dialog-content {
+  padding:10px;
+  text-align: left;
+}
+.ng-modal-close {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 120%;
+  display: inline-block;
+  font-weight: bold;
+  font-family: 'arial', 'sans-serif';
+}
+</style>

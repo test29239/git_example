@@ -1,0 +1,182 @@
+<!doctype html>
+<html ng-app>
+<head>
+	<title> AngularJS Tabs</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js" ></script>
+	<style>
+	p {
+		font-size: 22px;
+		font-weight: bold;
+		font-style: italic;
+		color: rgb(62, 62, 62);
+		margin: 18px;
+	}
+	ul {
+		float: left;
+		border-radius: 5px;
+		border: solid 1px rgb(198, 198, 198);
+		padding: 7px 11px;
+		background-color: rgb(248,248,248);
+	}
+	li {
+		float: left;
+		background-color: rgb(200,200,200);
+		padding: 5px 19px;
+		margin: 5px 2px 5px 0px;
+		color: black;
+		list-style: none;
+	}
+	li:hover, li:hover a {
+		background-color: rgb(6,179,6);
+		color:white;
+	}
+	li a {
+		text-decoration: none;
+		color: white;
+		font-size: 21px;
+		font-style: italic;
+		text-shadow: 1px 0px 3px rgb(157, 157, 157);
+	}
+	li:nth-child(1) { border-radius: 4px 0px 0px 4px; margin-left: 1px;}
+	li:nth-child(3) { border-radius: 0px 4px 4px 0px;}
+	.active {
+		background-color: rgb(6,179,6);
+	}
+	</style>
+</head>
+<body>
+	<section>
+		<ul ng-init="tab = 1">
+			<li ng-class="{active:tab===1}"> 
+				<a href ng-click="tab = 1">Enter Authorization Code</a>	
+			</li>
+			<li ng-class="{active:tab===2}"> 
+				<a href ng-click="tab = 2">Enter Email To Request</a> 
+			</li>
+			
+			<br><br>
+			<div ng-show="tab === 1"> 
+
+				<form ng-submit="access_login()">
+
+					<h3>Access Code Checking</h3>
+						<label>Code1</label>&nbsp&nbsp
+							<input type="number" ng-model="code1" required><br><br>
+						<label>Code2</label>&nbsp&nbsp
+							<input type="number" ng-model="code2" required><br><br>
+						<label>Code3</label>&nbsp&nbsp
+							<input type="number" ng-model="code3" required><br><br>
+						<input type="submit" value="submit" >
+					{{message}}
+
+				</form>
+			</div>
+
+
+			
+			<div ng-show="tab === 2"> 
+				<form ng-submit="req_acc()">
+
+						<h3>Request Access</h3>
+							<label>Please Enter Email</label>&nbsp&nbsp
+								<input type="email" ng-model="email" required><br><br>
+							
+							<input type="submit" value="submit" >
+						{{message}}
+				</form>
+
+
+			 </div>
+			
+		</ul>		
+	</section>		
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+
+<html ng-app="mymodal">
+<body>
+
+<div ng-controller="MainCtrl" class="container">
+  <button ng-click="toggleModal('Success')" class="btn btn-default">Success</button>
+  <button ng-click="toggleModal('Remove')" class="btn btn-default">Remove</button>
+  <button ng-click="toggleModal('Deny')" class="btn btn-default">Deny</button>
+  <button ng-click="toggleModal('Cancel')" class="btn btn-default">Cancel</button>
+  <modal visible="showModal">
+      Any additional data / buttons
+  </modal>
+</div>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <!-- Scripts -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+    <!-- App -->
+    <script>
+        var mymodal = angular.module('mymodal', []);
+
+mymodal.controller('MainCtrl', function ($scope) {
+    $scope.showModal = false;
+    $scope.buttonClicked = "";
+    $scope.toggleModal = function(btnClicked){
+        $scope.buttonClicked = btnClicked;
+        $scope.showModal = !$scope.showModal;
+    };
+  });
+
+mymodal.directive('modal', function () {
+    return {
+      template: '<div class="modal fade">' + 
+          '<div class="modal-dialog">' + 
+            '<div class="modal-content">' + 
+              '<div class="modal-header">' + 
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
+                '<h4 class="modal-title">{{ buttonClicked }} clicked!!</h4>' + 
+              '</div>' + 
+              '<div class="modal-body" ng-transclude></div>' + 
+            '</div>' + 
+          '</div>' + 
+        '</div>',
+      restrict: 'E',
+      transclude: true,
+      replace:true,
+      scope:true,
+      link: function postLink(scope, element, attrs) {
+          scope.$watch(attrs.visible, function(value){
+          if(value == true)
+            $(element).modal('show');
+          else
+            $(element).modal('hide');
+        });
+
+        $(element).on('shown.bs.modal', function(){
+          scope.$apply(function(){
+            scope.$parent[attrs.visible] = true;
+          });
+        });
+
+        $(element).on('hidden.bs.modal', function(){
+          scope.$apply(function(){
+            scope.$parent[attrs.visible] = false;
+          });
+        });
+      }
+    };
+  });
+
+    </script>
+</body>
+</html>

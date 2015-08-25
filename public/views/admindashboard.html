@@ -1,0 +1,298 @@
+<html ng-app>
+<head>
+	<title> AngularJS Tabs</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js" ></script>
+	<style>
+	p {
+		font-size: 22px;
+		font-weight: bold;
+		font-style: italic;
+		color: rgb(62, 62, 62);
+		margin: 18px;
+	}
+	ul {
+		float: left;
+		border-radius: 5px;
+		border: solid 1px rgb(198, 198, 198);
+		padding: 7px 11px;
+		background-color: rgb(248,248,248);
+	}
+	li {
+		float: left;
+		background-color: rgb(200,200,200);
+		padding: 5px 19px;
+		margin: 5px 2px 5px 0px;
+		color: black;
+		list-style: none;
+	}
+	li:hover, li:hover a {
+		background-color: rgb(6,179,6);
+		color:white;
+	}
+	li a {
+		text-decoration: none;
+		color: white;
+		font-size: 21px;
+		font-style: italic;
+		text-shadow: 1px 0px 3px rgb(157, 157, 157);
+	}
+	li:nth-child(1) { border-radius: 4px 0px 0px 4px; margin-left: 1px;}
+	li:nth-child(3) { border-radius: 0px 4px 4px 0px;}
+	.active {
+		background-color: rgb(6,179,6);
+	}
+	</style>
+</head>
+<body>
+	<section>
+		<ul ng-init="tab = 1">
+			<li ng-class="{active:tab===1}"> 
+				<a href ng-click="tab = 1">Manage User</a>	
+			</li>
+			<li ng-class="{active:tab===2}" ng-click="get_editor_details()"> 
+				<a href ng-click="tab = 2">D'cirque Editor</a> 
+			</li>
+			<li ng-class="{active:tab===3}" ng-click="get_brand_details()"> 
+				<a href ng-click="tab = 3">Brands Manager</a> 
+			</li>
+			<li ng-class="{active:tab===4}" ng-click="get_circle_details()"> 
+				<a href ng-click="tab = 4">Circle Manager</a> 
+			</li>
+			
+			<br><br>
+			<div ng-show="tab === 1"> 
+
+				<!-- <form ng-submit="access_login()">
+
+					<h3>Invite list</h3>
+						<label>Code1</label>&nbsp&nbsp
+							<input type="number" ng-model="code1" required><br><br>
+						
+						<input type="submit" value="submit" >
+					{{message}}
+
+				</form> -->
+			</div>
+
+
+			
+			<div ng-show="tab === 2"> 
+				<form ng-submit="compose_story(story_description,story_image)">
+
+					<h3>Compose Story</h3>
+						<label>Story Description</label>&nbsp&nbsp
+						 <textarea ng-model="story_description"></textarea><br><br><br>
+					<label>Choose Story Image</label>&nbsp&nbsp
+						 <img ng-src="{{image_source}}" style="position: absolute;  right: 650px;  top: inherit;  width: 150px;  height: 150px;  display: inline-block;  overflow: hidden;margin-top:-90px"><br><br><br>
+					<input type="file" id="trigger"  onchange="angular.element(this).scope().setFile(this)" accept="image/*" file-input="story_image" required>
+						<input type="submit" value="submit" >
+					
+
+				</form>
+
+						{{story_details}}
+			 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+			 <div ng-show="tab === 3"> 
+				
+			 <a href="" ng-click='toggleModal()'>Adding New Brands</a>	<br>
+			 <!-- {{brand_details}} -->
+			 
+			 <ul>
+				<li ng-repeat="u in brand_details" id="message{{$index}}"> {{u.n.properties.brand_name}}
+					<button ng-click="toggleModal1($index,u.n._id)">Edit</button>
+					<button ng-click="remove_brand($index,u.n._id)">remove</button>
+				</li>
+			</ul><br>
+			 </div>
+
+
+
+
+
+
+
+
+
+			 <div ng-show="tab === 4"> 
+				<a href="" ng-click='toggleModal2()'>Adding New Circle</a>	<br>
+			 <!-- {{brand_details}} -->
+			 
+			 <ul>
+				<li ng-repeat="u in circle_details" id="message{{$index}}"> {{u.n.properties.circle_name}}
+					<button ng-click="toggleModal3($index,u.n._id)">Edit</button>
+					<!-- <button ng-click="toggleModal4($index,u.n._id)">Send Message to Circle</button> -->
+					<button ng-click="remove_circle($index,u.n._id)">remove</button>
+				</li>
+			</ul><br>
+
+			 </div>
+			
+		</ul>	
+
+<modal-dialog show='modalShown' width='750px' height='70%'>
+  <form ng-submit="add_brand(brand_name,brand_description,brand_image)" enctype="multipart/form-data" >
+
+	<h3>Adding Brands </h3>
+
+		
+		<label>Brand Name</label>&nbsp&nbsp
+			<input type="text" ng-model="brand_name" required><br><br>
+		<label>Brand Description</label>&nbsp&nbsp
+			 <textarea ng-model="brand_description"></textarea><br><br>
+		<label>Choose Brand Image</label>&nbsp&nbsp
+			 <img ng-src="{{image_source}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-125px">
+		<input type="file" id="trigger"  onchange="angular.element(this).scope().setFile(this)" accept="image/*" file-input="brand_image" required>
+			<!--  <p><input type="file"  file-input="brand_image"  id="engPdf" required  /> -->
+			 <br><br>
+		
+		<input type="submit" value="Add Brand" >
+	
+
+	</form>
+</modal-dialog>	
+
+
+
+<modal-dialog show='modalShown1' width='750px' height='70%'>
+
+  
+  {{single_brand_det[0].n.properties.photo}}
+  <form ng-submit="edit_brand(single_brand_det[0].n.properties.brand_name,single_brand_det[0].n.properties.description,brand_edit_image,getBrand_id,single_brand_det[0].n.properties.photo)" enctype="multipart/form-data" >
+
+	<h3>Editing Brands </h3>
+		<label>Brand Name</label>&nbsp&nbsp
+			<input type="text" ng-model="single_brand_det[0].n.properties.brand_name" required><br><br>
+		<label>Brand Description</label>&nbsp&nbsp
+			 <textarea ng-model="single_brand_det[0].n.properties.description"></textarea><br><br>
+		<label>Choose Brand Image</label>&nbsp&nbsp
+			 
+			 <!-- <p><input type="file"    id="engPdf" required  /> -->
+			 <br><br>
+		
+		<img ng-src="./uploads/{{single_brand_det[0].n.properties.photo}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-170px">
+		 <img ng-src="{{image_source}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-170px">
+		<input type="file" id="trigger" file-input="brand_edit_image" onchange="angular.element(this).scope().setFile(this)" accept="image/*">
+
+	<input type="submit" value="Add Brand" >
+	
+
+	</form>
+</modal-dialog>	
+
+
+
+<modal-dialog show='modalShown2' width='750px' height='70%'>
+  <form ng-submit="add_circle(circle_name,circle_description,circle_image)" enctype="multipart/form-data" >
+
+	<h3>Adding circle</h3>
+
+		
+		<label>circle Name</label>&nbsp&nbsp
+			<input type="text" ng-model="circle_name" required><br><br>
+		<label>Circle Description</label>&nbsp&nbsp
+			 <textarea ng-model="circle_description"></textarea><br><br>
+		<label>Choose Circle Image</label>&nbsp&nbsp
+			 <img ng-src="{{image_source}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-125px">
+		<input type="file" id="trigger"  onchange="angular.element(this).scope().setFile(this)" accept="image/*" file-input="circle_image" required>
+			<!--  <p><input type="file"  file-input="brand_image"  id="engPdf" required  /> -->
+			 <br><br>
+		
+		<input type="submit" value="Add Circle" >
+	
+
+	</form>
+</modal-dialog>	
+
+
+
+
+
+
+
+
+<modal-dialog show='modalShown3' width='750px' height='70%'>
+  <form ng-submit="edit_circle(single_circle_det[0].n.properties.circle_name,single_circle_det[0].n.properties.description,circle_edit_image,getCircle_id,single_circle_det[0].n.properties.photo)" enctype="multipart/form-data" >
+
+	<h3>Editing Circle </h3>
+		<label>Circle Name</label>&nbsp&nbsp
+			<input type="text" ng-model="single_circle_det[0].n.properties.circle_name" required><br><br>
+		<label>Brand Description</label>&nbsp&nbsp
+			 <textarea ng-model="single_circle_det[0].n.properties.description"></textarea><br><br>
+		<label>Choose Brand Image</label>&nbsp&nbsp
+			 
+			 <!-- <p><input type="file"    id="engPdf" required  /> -->
+			 <br><br>
+		
+		<img ng-src="./uploads/{{single_circle_det[0].n.properties.photo}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-170px">
+		 <img ng-src="{{image_source}}" style="position: absolute;  right: 80px;  top: inherit;  width: 250px;  height: 250px;  display: inline-block;  overflow: hidden;margin-top:-170px">
+		<input type="file" id="trigger" file-input="circle_edit_image" onchange="angular.element(this).scope().setFile(this)" accept="image/*">
+
+	<input type="submit" value="Add circle" >
+	
+
+	</form>
+</modal-dialog>	
+	</section>		
+</body>
+</html>
+<style>
+	
+.ng-modal-overlay {
+  /* A dark translucent div that covers the whole screen */
+  position:absolute;
+  z-index:9999;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  opacity: 0.8;
+}
+.ng-modal-dialog {
+  /* A centered div above the overlay with a box shadow. */
+  z-index:10000;
+  position: absolute;
+  width: 50%; /* Default */
+
+  /* Center the dialog */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+
+  background-color: #fff;
+  box-shadow: 4px 4px 80px #000;
+}
+.ng-modal-dialog-content {
+  padding:10px;
+  text-align: left;
+}
+.ng-modal-close {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 120%;
+  display: inline-block;
+  font-weight: bold;
+  font-family: 'arial', 'sans-serif';
+}
+</style>
+
+<script>
+
+</script>
