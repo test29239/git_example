@@ -7,3 +7,11 @@ sudo service neo4j-service start
 sudo service neo4j-service stop
 
 sudo service neo4j-service restart
+
+https://app.graphenedb.com
+
+credentials is
+test29239@gmail.com
+and ananth123 
+
+after logging in go to this url http://neo4j.sb02.stations.graphenedb.com:24789/browser/ 

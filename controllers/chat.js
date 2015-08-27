@@ -2,6 +2,15 @@ var neo4j=require('neo4j');
 var mv = require('mv');
 var path = require('path');
 var nodemailer=require('nodemailer');
+/*var db = new neo4j.GraphDatabase({
+    // Support specifying database info via environment variables,
+    // but assume Neo4j installation defaults.
+    url: process.env['NEO4J_URL'] || process.env['GRAPHENEDB_URL'] ||
+        'http://neo4j:ananth@localhost:7474',
+    auth: process.env['NEO4J_AUTH'],
+});*/
+
+
 var db = new neo4j.GraphDatabase({
     // Support specifying database info via environment variables,
     // but assume Neo4j installation defaults.
@@ -9,7 +18,6 @@ var db = new neo4j.GraphDatabase({
         'http://neo4j:L5mPUTZ8tvQ9DxNo3MRB@neo4j.sb02.stations.graphenedb.com:24789/db/data/',
     auth: process.env['NEO4J_AUTH'],
 });
-
 
 exports.create_group=function(req,res){
 	var q1=[
@@ -24,10 +32,12 @@ exports.create_group=function(req,res){
 	       console.log(JSON.stringify(result));
 	       if(!result.length){
 				var query = [
-				  	'MATCH (p:Userdetails) where id(p)='+req.body.id,
+				  'MATCH (p:Userdetails) where id(p)='+req.body.id,
 					'CREATE (m:groupChat_list { name:"'+req.body.groupName+'",created_time:timestamp() })',
-					'CREATE (p)-[r:groupList { roles: ["admin"]}]->(m)',
-					'RETURN p,r,m'
+          'CREATE (cm:chat_messages {name:"chat_list", created_time:timestamp() })',
+          'CREATE (p)-[r:groupList { roles: ["admin"]}]->(m)',
+          'CREATE (m)-[cg:chat_group { roles: ["chat"]}]->(cm)',
+					'RETURN p,r,m,cm'
 				].join('\n');
 			      console.log(query)
 				db.cypher(query ,function (err, result) {
@@ -168,3 +178,81 @@ exports.other_group_invited=function(req,res){
         })
   }
 }
+
+
+
+exports.post_groupChat_comment=function(req,res){
+  console.log(JSON.stringify(req.body)+'hi bor')
+  if(req.session.user_id>=0){
+      var query=[
+          'MATCH (p:Userdetails)-[r:groupList]->(g:groupChat_list)-[cg:chat_group { roles: ["chat"]}]->(cm:chat_messages) where id(p)=16 and g.name="aaa" ',
+          'merge(c:chat_det{message:"hi23453425",date_create:timestamp()})-[d:chatting_mess]->(cm)',
+          'RETURN p,r,g,cg,cm'
+      ].join('\n');
+
+     console.log(query)
+      db.cypher(query ,function (err, result) {
+          if (err) {
+            console.log(err);
+          } else {
+            if(result.length>=1){
+              res.send(result)
+            }else{
+              res.send(''+0)
+            }
+            //console.log(JSON.stringify(result))
+            
+          }
+        })
+  }
+}
+
+
+
+/*
+
+to find out the each user group chat message
+MATCH (p:Userdetails)-[r:groupList]->(g:groupChat_list) where id(p)=16 and g.name="aaa" 
+MATCH (g)-[cg:chat_group]->(cm:chat_messages)
+RETURN p,r,g,cg,cm
+
+
+
+
+
+MATCH (p:Userdetails)-[r:groupList]->(g:groupChat_list) where id(p)=16 and g.name="aaa" 
+MATCH (g)-[cg:chat_group]->(cm:chat_messages)
+create(cm:chat_messages{message:"hwawejiawh",date:timestamp()}),
+RETURN p,r,g,cg,cm
+
+
+
+
+
+
+
+
+
+
+
+MATCH (p:Userdetails)-[r:groupList]->(g:groupChat_list)-[cg:chat_group { roles: ["chat"]}]->(cm:chat_messages) where id(p)=16 and g.name="aaa" 
+RETURN p,r,g,cg,cm,id(cm)
+
+
+
+
+
+
+
+
+
+
+
+
+
+working link
+MATCH (p:Userdetails)-[r:groupList]->(g:groupChat_list)-[cg:chat_group { roles: ["chat"]}]->(cm:chat_messages) where id(p)=16 and g.name="aaa" 
+merge(c:chat_det{message:"hi23453425",date_create:timestamp()})-[d:chatting_mess]->(cm)
+RETURN p,r,g,cg,cm
+*/
+

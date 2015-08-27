@@ -152,6 +152,28 @@ $scope.user_othergroup_det=[]
       }
 
 
+  $scope.edit_privacy_setting=function(){
+    console.log($scope.user_det[0].user._id+'user_det[0].user.properties.privacy')    ;
+     $http.post('/privacy_setting', {
+          id:               $scope.user_det[0].user._id,
+          privacy:          $scope.user_det[0].user.properties.privacy,
+          history:          $scope.user_det[0].user.properties.history,
+          tagging:          $scope.user_det[0].user.properties.tagging,
+          post:             $scope.user_det[0].user.properties.post,
+          followers:        $scope.user_det[0].user.properties.followers,
+          following:        $scope.user_det[0].user.properties.following,
+          reviews:          $scope.user_det[0].user.properties.reviews,
+          circle:           $scope.user_det[0].user.properties.circle
+        })
+        .success(function(user){
+          $route.reload();
+          
+          /*$scope.details.push($scope.text);
+          $location.path('/dashboard');
+          */
+        })
+  }
+
 $scope.setFile = function(element) {
     $scope.currentFile = element.files[0];
      var reader = new FileReader();

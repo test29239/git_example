@@ -108,50 +108,50 @@ console.log(a[i].g.properties.name +'----'+a[i].g._id)
 </modal-dialog>
 
 <modal-dialog show='modalShown2' width='550px' height='70%'>
-  <form ng-submit="" >
+  <form ng-submit="edit_privacy_setting()" >
 
 	<h3>Privacy changes </h3>
-
+	
 		<input type="hidden" ng-model="user_det[0].user._id">
 		<label>Search Privacy</label>
-		 <input type="radio" name="search_privacy" ng-model="search_privacy" value="yes"  ng-required="!color"/>Yes
-        <input type="radio" name="search_privacy" ng-model="search_privacy" value="no"  ng-required="!color" />NO
+		 <input type="radio" name="search_privacy" ng-model="user_det[0].user.properties.privacy" value="1"  ng-required="!color"/>Yes
+        <input type="radio" name="search_privacy" ng-model="user_det[0].user.properties.privacy" value="0"  ng-required="!color" />NO
         <br>
 		<label>Search History</label>
-		 <input type="radio" name="search_history" ng-model="search_history" value="yes" ng-required="!color"/>Yes
-        <input type="radio" name="search_history" ng-model="search_history" value="no"  ng-required="!color" />No
+		 <input type="radio" name="search_history" ng-model="user_det[0].user.properties.history" value="1" ng-required="!color"/>Yes
+        <input type="radio" name="search_history" ng-model="user_det[0].user.properties.history" value="0"  ng-required="!color" />No
         <br/>
 		<label>Allow Tagging</label>
-		 <input type="radio" name="allow_taging" ng-model="allow_taging" value="yes"  ng-required="!color"/>Yes
-        <input type="radio" name="allow_taging" ng-model="allow_taging" value="no"  ng-required="!color" />No
+		 <input type="radio" name="allow_taging" ng-model="user_det[0].user.properties.tagging" value="1"  ng-required="!color"/>Yes
+        <input type="radio" name="allow_taging" ng-model="user_det[0].user.properties.tagging" value="0"  ng-required="!color" />No
         <br/>
         <label>Profile Information Visibility</label>&nbsp&nbsp&nbsp
         <label>Posts</label>
-		<select ng-model="posts" >
+		<select ng-model="user_det[0].user.properties.post" >
 		  <option value="1">EveryOne</option>
 		  <option value="0">None</option>
 		</select>
 		<br><br>
 		<label>Followers</label>
-		<select ng-model="followers"  >
+		<select ng-model="user_det[0].user.properties.followers"  >
 		  <option value="1">EveryOne</option>
 		  <option value="0">None</option>
 		</select>
 		<br><br>
 		<label>Following</label>
-		<select ng-model="following"  >
+		<select ng-model="user_det[0].user.properties.following"  >
 		 <option value="1">EveryOne</option>
 		  <option value="0">None</option>
 		</select>
 		<br><br>
 		<label>Review</label>
-		<select ng-model="review"  >
+		<select ng-model="user_det[0].user.properties.reviews"  >
 		 <option value="1">EveryOne</option>
 		  <option value="0">None</option>
 		</select>
 		<br><br>
 		<label>Circle</label>
-		<select ng-model="circle"  >
+		<select ng-model="user_det[0].user.properties.circle"  >
 		 <option value="1">EveryOne</option>
 		  <option value="0">None</option>
 		</select>

@@ -10,7 +10,7 @@ var nodemailer=require('nodemailer');
 var page=require('./controllers/page');
 var admin=require('./controllers/admin')
 var chat=require('./controllers/chat')
-/*var socket = require('./controllers/socket.js');*/
+var socket = require('./controllers/socket.js');
 var neo4j = require('neo4j');
 var session = require('express-session');
 var md5   = require('MD5');
@@ -20,8 +20,9 @@ var app = express();
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 var mv = require('mv');
-/*var app = module.exports = express.createServer();
-var io = require('socket.io').listen(app);*/
+
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 module.exports = app;
 app.engine('html', swig.renderFile);
 // view engine setup
@@ -43,24 +44,24 @@ app.use(express.methodOverride());
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000000 }}))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(multipartMiddleware);
-/*var db = new neo4j.GraphDatabase({
-    // Support specifying database info via environment variables,
-    // but assume Neo4j installation defaults.
-    url: process.env['NEO4J_URL'] || process.env['GRAPHENEDB_URL'] ||
-        'http://neo4j:ananth@localhost:7474',
-    auth: process.env['NEO4J_AUTH'],
-});*/
+
 
 //https://app.graphenedb.com/dbs/neo4j/connection
 var db = new neo4j.GraphDatabase({
     // Support specifying database info via environment variables,
     // but assume Neo4j installation defaults.
     url: process.env['NEO4J_URL'] || process.env['GRAPHENEDB_URL'] ||
-        'http://neo4j:L5mPUTZ8tvQ9DxNo3MRB@neo4j.sb02.stations.graphenedb.com:24789/db/data/',
+       'http://neo4j:ananth@localhost:7474',
     auth: process.env['NEO4J_AUTH'],
 });
-
-
+/*
+var db = new neo4j.GraphDatabase({
+    // Support specifying database info via environment variables,
+    // but assume Neo4j installation defaults.
+    url: process.env['NEO4J_URL'] || process.env['GRAPHENEDB_URL'] ||
+        'http://neo4j:L5mPUTZ8tvQ9DxNo3MRB@neo4j.sb02.stations.graphenedb.com:24789/db/data/',
+    auth: process.env['NEO4J_AUTH'],
+});*/
 
 /*var b = new Buffer('admin');
 var s = b.toString('base64');
@@ -74,6 +75,11 @@ console.log(m+'after decrypt');*/
 app.get('/',function(req,res){
   res.render('index.html');
 })
+
+
+
+
+
 app.get('/loggedin',page.loggedin);
 /*app.get('/loggedin_admin',page.loggedin);*/
 app.post('/forgotpassword', page.forgot_password);
@@ -107,7 +113,11 @@ app.get('/group_chat_details',page.group_chat_details);
 app.get('/display_all_user',chat.display_all_user);
 app.post('/add_to_group',chat.add_to_group);
 app.post('/chatGroup/:id',chat.display_addedUser);
-app.get('/other_group_invited',chat.other_group_invited)
+app.get('/other_group_invited',chat.other_group_invited);
+app.post('/post_groupChat_comment',chat.post_groupChat_comment);
+
+app.post('/privacy_setting',page.privacy_setting)
+
 app.post('/resetpassword/:token/:email',function(req,res){
   var token = req.params.token;
   var email = req.params.email;
@@ -168,8 +178,35 @@ app.get('/view_list',function(req,res){
         }
       })
 })
-//module.exports = app;
 
-http.createServer(app).listen(app.get('port'), function(){
+
+/*app.get('/view_list',function(req,res){
+      var query=[
+          'MATCH (p:Userdetails)-[r:groupList]->(g:groupChat_list)',
+            'create(cm:chat_messages{ name:"hi",date_created:timestamp()})',
+            'merge (g)-[cg:chat_group { roles: ["chat"]}]->(cm) where id(p)=16',
+            'RETURN p,r,g,cg,cm'
+      ].join('\n');
+
+     console.log(query)
+      db.cypher(query ,function (err, result) {
+          if (err) {
+            console.log(err);
+          } else {
+           console.log(JSON.stringify(result))
+            
+          }
+        })
+  
+})*/
+
+
+io.on('connection', socket);
+
+/*http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+});*/
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
 });

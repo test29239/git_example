@@ -2,6 +2,15 @@ var neo4j=require('neo4j');
 var mv = require('mv');
 var path = require('path');
 var nodemailer=require('nodemailer');
+/*var db = new neo4j.GraphDatabase({
+    // Support specifying database info via environment variables,
+    // but assume Neo4j installation defaults.
+    url: process.env['NEO4J_URL'] || process.env['GRAPHENEDB_URL'] ||
+        'http://neo4j:ananth@localhost:7474',
+    auth: process.env['NEO4J_AUTH'],
+});
+*/
+
 var db = new neo4j.GraphDatabase({
     // Support specifying database info via environment variables,
     // but assume Neo4j installation defaults.
@@ -9,7 +18,6 @@ var db = new neo4j.GraphDatabase({
         'http://neo4j:L5mPUTZ8tvQ9DxNo3MRB@neo4j.sb02.stations.graphenedb.com:24789/db/data/',
     auth: process.env['NEO4J_AUTH'],
 });
-
 exports.adminlogin=function(req,res){
 /*var pass = new Buffer(req.body.password)
 var password = pass.toString('base64');*/

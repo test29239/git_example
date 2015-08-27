@@ -2,6 +2,14 @@ var neo4j=require('neo4j')
 var nodemailer=require('nodemailer');
 var mv = require('mv');
 var path = require('path');
+/*var db = new neo4j.GraphDatabase({
+    // Support specifying database info via environment variables,
+    // but assume Neo4j installation defaults.
+    url: process.env['NEO4J_URL'] || process.env['GRAPHENEDB_URL'] ||
+        'http://neo4j:ananth@localhost:7474',
+    auth: process.env['NEO4J_AUTH'],
+});*/
+
 var db = new neo4j.GraphDatabase({
     // Support specifying database info via environment variables,
     // but assume Neo4j installation defaults.
@@ -9,8 +17,6 @@ var db = new neo4j.GraphDatabase({
         'http://neo4j:L5mPUTZ8tvQ9DxNo3MRB@neo4j.sb02.stations.graphenedb.com:24789/db/data/',
     auth: process.env['NEO4J_AUTH'],
 });
-
-
 
 exports.loggedin=function(req,res){
   if(req.session.username || req.session.admin_username){
@@ -177,7 +183,8 @@ exports.registration=function(req,res){
                   'where n.email= "'+email+'"',
                   'SET n.username = "'+name+'",n.password="'+password+'",',
                   'n.title="'+title+'",n.type="'+type+'",n.phone="'+phone+'",n.gender="'+gender+'",n.photo_url="'+photo_url+'",n.city="'+city+'",',
-                  'n.country="'+country+'",n.dob="'+dob+'",n.doj=timestamp(),n.access_code="'+access_code+'"',
+                  'n.country="'+country+'",n.dob="'+dob+'",n.doj=timestamp(),n.access_code="'+access_code+'",',
+                    'n.privacy=0,n.history=0,n.tagging=0,n.post=0,n.followers=0,n.following=0,n.reviews=0,n.circle=0',
                   'RETURN n',
               ].join('\n');
            
@@ -194,7 +201,9 @@ exports.registration=function(req,res){
             var query3 = [
                 'create (user:Userdetails{username:"'+name+'",email:"'+email+'",password:"'+password+'",',
                   'title:"'+title+'",type:"'+type+'",phone:"'+phone+'",gender:"'+gender+'",photo_url:"'+photo_url+'",city:"'+city+'",',
-                  'country:"'+country+'",dob:"'+dob+'",doj:timestamp(),access_code:"'+access_code+'"})'
+                  'country:"'+country+'",dob:"'+dob+'",doj:timestamp(),access_code:"'+access_code+'",',
+                  'privacy:0,history:0,tagging:0,post:0,followers:0,following:0,reviews:0,circle:0})'
+
             ].join('\n');
           
               db.cypher(query3 ,function (err3, result3) {
@@ -558,4 +567,30 @@ exports.delete_fromGroup=function(req,res){
           }
         })
 /*  }*/
+}
+
+
+
+exports.privacy_setting=function(req,res){
+      var query = [
+          'MATCH (n:Userdetails)',
+          'where id(n)='+req.body.id,
+          'SET n.privacy = "'+req.body.privacy+'",n.history="'+req.body.history+'",',
+          'n.tagging = "'+req.body.tagging+'",n.post="'+req.body.post+'",n.followers="'+req.body.followers+'",n.following="'+req.body.following+'",n.reviews="'+req.body.reviews+'",n.circle="'+req.body.circle+'"',
+          'RETURN n'
+      ].join('\n');
+     console.log(query)
+      db.cypher(query ,function (err, result) {
+          if (err) {
+            console.log(err);
+          } else {
+            if(result.length>=1){
+              res.send(result)
+            }else{
+              res.send(''+0)
+            }
+            //console.log(JSON.stringify(result))
+            
+          }
+        })
 }

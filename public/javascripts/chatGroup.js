@@ -1,4 +1,29 @@
-app.controller('chatGroup', ['$scope', '$http','$rootScope', '$location','$route','$routeParams',function($scope, $http,$rootScope, $location,$route,$routeParams) {
+
+app.factory('socket', function ($rootScope) {
+  var socket = io.connect();
+  return {
+    on: function (eventName, callback) {
+      socket.on(eventName, function () {  
+        var args = arguments;
+        $rootScope.$apply(function () {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function (eventName, data, callback) {
+      socket.emit(eventName, data, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      })
+    }
+  };
+});
+
+app.controller('chatGroup', ['$scope', '$http','$rootScope', '$location','$route','$routeParams','socket',function($scope, $http,$rootScope, $location,$route,$routeParams,socket) {
   
  $scope.modalShown_ppl = false;
   
@@ -55,18 +80,40 @@ app.controller('chatGroup', ['$scope', '$http','$rootScope', '$location','$route
           })
 	}
 
+  
+
+  // Socket listeners
+  // ================
+
+  
+  socket.on('send:message', function (message) {
+    $scope.messages.push(message);
+  });
+
+  
+
   $scope.messages = [];
 
   $scope.sendMessage = function () {
-    // add the message to our model locally
-    $scope.messages.push({
-      user: $scope.name,
-      text: $scope.message
+    socket.emit('send:message', {
+      message: $scope.message
     });
-console.log(JSON.stringify($scope.messages)+'messages')
+    $http.post('/post_groupChat_comment', {
+            message: $scope.message
+          })
+          .success(function(data){
+            console.log(data)
+            //$route.reload();
+            //$rootScope.message_chat = user;
+            //$location.path('/');
+            
+          })
+    
     // clear message box
     $scope.message = '';
   };
+
+
 
 
 

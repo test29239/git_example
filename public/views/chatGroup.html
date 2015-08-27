@@ -10,6 +10,7 @@
 <modal-dialog show='modalShown_ppl' width='750px' height='70%'>
 
 	<h3>Add People group</h3>
+  {{all_user[0]}}
 		<ul>
 			<li ng-repeat="b in all_user[0]" id="message{{$index}}">{{b.u.properties.username}}
 			
@@ -39,6 +40,20 @@
   </div>
   
 </div>
+
+
+
+<script>
+/*  var socket = io();
+
+  $('form').submit(function(){
+    socket.emit('chat message', $('#m').val());
+    $('#m').val('');
+    return false;
+  });*/
+</script>
+
+
 <style>
       dd,dt {
         float:left;
